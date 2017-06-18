@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1092204456246",
+    "firebase_url": "https://receipttracker-d59f5.firebaseio.com",
+    "project_id": "receipttracker-d59f5",
+    "storage_bucket": "receipttracker-d59f5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1092204456246:android:43c5ae0707af2089",
+        "android_client_info": {
+          "package_name": "com.example.brandonpaw.receipttracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1092204456246-psqftus4ln4pq8jkbsvhkqpcekkskou3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.brandonpaw.receipttracker",
+            "certificate_hash": "a1d5fbd5b954444d99854983ce47d707f24d0303"
+          }
+        },
+        {
+          "client_id": "1092204456246-eh3s3j02g0m5pj1qtq770pao3aestv5t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjxujYIGWoREEr4zuc48yXGSbCSR7y1pM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1092204456246-eh3s3j02g0m5pj1qtq770pao3aestv5t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
