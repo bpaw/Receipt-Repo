@@ -9,8 +9,9 @@
     tools:showIn="@layout/activity_add_receipt">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="0dp"
-        android:layout_height="318dp"
+        android:layout_height="280dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
@@ -25,205 +26,85 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
-        <LinearLayout
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/label_receipt"
-                android:layout_width="75dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.57"
-                android:background="@android:drawable/screen_background_light_transparent"
-                android:ems="10"
-                android:gravity="center_vertical"
-                android:inputType="textPersonName"
-                android:text="Receipt:"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/add_receipt"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="0.85"
-                android:background="@android:drawable/screen_background_light_transparent"
-                android:ems="10"
-                android:inputType="textPersonName" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Receipt" />
 
-        </LinearLayout>
+        </android.support.design.widget.TextInputLayout>
 
-        <View
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal"
-            android:weightSum="1">
-
-            <TextView
-                android:id="@+id/label_tip"
-                android:layout_width="37dp"
-                android:layout_height="match_parent"
-                android:background="@android:drawable/screen_background_light_transparent"
-                android:ems="10"
-                android:gravity="center_vertical"
-                android:inputType="textPersonName"
-                android:text="Tip:"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/optional1"
-                android:layout_width="69dp"
-                android:layout_height="match_parent"
-                android:background="@android:drawable/screen_background_light_transparent"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="(optional)"
-                android:textSize="10sp"
-                android:textStyle="italic" />
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/add_tip"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:drawable/screen_background_light_transparent"
-                android:ems="10"
-                android:inputType="textPersonName" />
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:hint="Tip" />
 
-        <View
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/label_tax"
-
-                android:layout_width="37dp"
-                android:layout_height="match_parent"
-                android:background="@android:drawable/screen_background_light_transparent"
-                android:ems="10"
-                android:gravity="center_vertical"
-                android:inputType="textPersonName"
-                android:text="Tax:"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_weight="0.17" />
-
-            <EditText
-                android:id="@+id/optional2"
-                android:layout_width="63dp"
-                android:layout_height="match_parent"
-                android:background="@android:drawable/screen_background_light_transparent"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="(optional)"
-                android:textSize="10sp"
-                android:textStyle="italic" />
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/add_tax"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1.26"
-                android:background="@android:drawable/screen_background_light_transparent"
-                android:ems="10"
-                android:inputType="textPersonName" />
-        </LinearLayout>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Tax" />
 
-        <View
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/label_total"
-                android:layout_width="55dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1.06"
-                android:background="@android:drawable/screen_background_light_transparent"
-                android:ems="10"
-                android:gravity="center_vertical"
-                android:inputType="textPersonName"
-                android:text="Total:"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/add_total"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@android:drawable/screen_background_light_transparent"
-                android:ems="10"
-                android:inputType="textPersonName" />
-        </LinearLayout>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Total" />
 
-        <View
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray" />
+            android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/label_folders"
-                android:layout_width="55dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1.09"
-                android:background="@android:drawable/screen_background_light_transparent"
-                android:ems="10"
-                android:gravity="center_vertical"
-                android:inputType="textPersonName"
-                android:text="Folders:"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <EditText
+            <MultiAutoCompleteTextView
                 android:id="@+id/add_folders"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@android:drawable/screen_background_light_transparent"
-                android:ems="10"
-                android:inputType="textPersonName" />
-        </LinearLayout>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Folders" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray" />
+        </android.support.design.widget.TextInputLayout>
 
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/testerImageView"
+        android:layout_width="250dp"
+        android:layout_height="65dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.681"
+        app:srcCompat="@color/background" />
+
     <Button
         android:id="@+id/button_add"
-        android:layout_width="243dp"
-        android:layout_height="48dp"
+        android:layout_width="240dp"
+        android:layout_height="50dp"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:text="Add Receipt"
@@ -231,5 +112,18 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.762" />
+        app:layout_constraintVertical_bias="0.982" />
+
+    <Button
+        android:id="@+id/button_camera"
+        android:layout_width="240dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Capture"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.829" />
 </android.support.constraint.ConstraintLayout>
