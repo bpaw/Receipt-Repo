@@ -1,5 +1,7 @@
 package com.example.brandonpaw.receipttracker;
 
+import android.net.Uri;
+
 import java.util.ArrayList;
 
 /**
@@ -14,10 +16,11 @@ public class Receipt {
     public int tax;
     public int total;
     public ArrayList<String> folders;
+    public String photoPath;
 
     public Receipt() {}
 
-    public Receipt(String receipt, int tip, int tax, int total, ArrayList<String> Xfolders) {
+    public Receipt(String receipt, int tip, int tax, int total, ArrayList<String> Xfolders, String path) {
         this.receipt = receipt;
         this.tip = tip;
         this.tax = tax;
@@ -27,5 +30,6 @@ public class Receipt {
 
             folders.add(folder);
         }
+        this.photoPath = path;
     }
 }

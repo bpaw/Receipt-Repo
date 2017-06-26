@@ -34,7 +34,7 @@
                 android:id="@+id/add_receipt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Receipt" />
+                android:hint="Receipt*" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -70,7 +70,7 @@
                 android:id="@+id/add_total"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Total" />
+                android:hint="Total*" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -89,41 +89,29 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/testerImageView"
-        android:layout_width="250dp"
-        android:layout_height="65dp"
+        android:id="@+id/imageView2"
+        android:layout_width="300dp"
+        android:layout_height="150dp"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.681"
-        app:srcCompat="@color/background" />
+        app:layout_constraintVertical_bias="0.811"
+        app:srcCompat="@android:color/transparent" />
 
     <Button
-        android:id="@+id/button_add"
+        android:id="@+id/button_continue"
         android:layout_width="240dp"
         android:layout_height="50dp"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
-        android:text="Add Receipt"
+        android:text="Continue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.982" />
 
-    <Button
-        android:id="@+id/button_camera"
-        android:layout_width="240dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Capture"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.829" />
 </android.support.constraint.ConstraintLayout>

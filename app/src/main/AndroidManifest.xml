@@ -3,7 +3,9 @@
     package="com.example.brandonpaw.receipttracker">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-feature android:name="android.hardware.camera"
+
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
 
     <application
@@ -28,6 +30,10 @@
         <activity
             android:name=".HomepageActivity"
             android:label="@string/title_activity_homepage"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".confirmReceipt"
+            android:label="@string/title_activity_confirm_receipt"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
