@@ -12,15 +12,15 @@ public class Receipt {
 
     // Fields to write to the firebase database
     public String receipt;
-    public int tip;
-    public int tax;
-    public int total;
+    public double tip;
+    public double tax;
+    public double total;
     public ArrayList<String> folders;
     public String photoPath;
 
     public Receipt() {}
 
-    public Receipt(String receipt, int tip, int tax, int total, ArrayList<String> Xfolders, String path) {
+    public Receipt(String receipt, double tip, double tax, double total, ArrayList<String> Xfolders, String path) {
         this.receipt = receipt;
         this.tip = tip;
         this.tax = tax;

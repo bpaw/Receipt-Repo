@@ -6,10 +6,12 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -18,11 +20,17 @@ import android.widget.ImageView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -31,6 +39,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class addReceipt extends AppCompatActivity  implements View.OnClickListener {
 
@@ -46,7 +55,7 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
     // Button to mark adding receipts
     Button add;
 
-    String [] suggestions;
+    ArrayList<String> suggestions;
 
     byte[] imageBytes;
     Uri photoPath;
@@ -82,13 +91,32 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
         add.setOnClickListener(this);
 
         // Initialize the suggestions field
-        suggestions = new String[]{"June 2017", "Shopping", "Food", "Clothes", "School"};
 
-        // Set the suggestions for our MultiAutoCompleteTeView for the folders information
-        MultiAutoCompleteTextView folderSuggestions = (MultiAutoCompleteTextView) findViewById(R.id.add_folders);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.suggestion, suggestions);
-        folderSuggestions.setAdapter(adapter);
-        folderSuggestions.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+        // Add a ValueEventListener to get the User's name
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                // Get the User's information
+                User user = dataSnapshot.getValue(User.class);
+
+                suggestions = user.folders;
+
+                // Set the suggestions for our MultiAutoCompleteTeView for the folders information
+                MultiAutoCompleteTextView folderSuggestions = (MultiAutoCompleteTextView) findViewById(R.id.add_folders);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.suggestion, suggestions);
+                folderSuggestions.setAdapter(adapter);
+                folderSuggestions.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        databaseReference.addValueEventListener(postListener);
+
+
 
         //mImageView = (ImageView) findViewById(R.id.testerImageView);
     }
@@ -109,9 +137,62 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
         values[1] = inputTip.getText().toString().trim();
         values[2] = inputTax.getText().toString().trim();
         values[3] = inputTotal.getText().toString().trim();
-        //values[4] = inputFolders.getText().toString().trim();
+        values[4] = inputFolders.getText().toString().trim();
 
+        // Parse the text that have integral types
+        values[1] = parseText(values[1]);
+        values[2] = parseText(values[2]);
+        values[3] = parseText(values[3]);
+
+        // Return the final product
         return values;
+    }
+
+    public String parseText(String input) {
+
+        try {
+            String retVal = String.valueOf(Double.parseDouble(input));
+            return retVal;
+        } catch (NumberFormatException e) {
+            String retVal = "0";
+            return retVal;
+        }
+    }
+
+    public ArrayList<String> parseFolders(String folders) {
+
+        ArrayList<String> individualFolders = new ArrayList<>();
+        int lastIndex = 0;
+
+
+        while(folders.indexOf(",") != -1) {
+
+            int index = folders.indexOf(",");
+            String currFolder = folders.substring(lastIndex, index);
+            individualFolders.add(currFolder);
+            folders = folders.substring(index, folders.length());
+        }
+
+        return individualFolders;
+    }
+
+    private String generateID(Receipt receipt) {
+
+        Calendar cal = Calendar.getInstance();
+        String month = String.valueOf(cal.get(Calendar.MONTH));
+        String day = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
+
+        if (month.length() < 2) {
+            month = "0" + month;
+        }
+
+        if (day.length() < 2) {
+            day = "0" + day;
+        }
+
+        String id = receipt.receipt + "|" + cal.get(Calendar.YEAR) + month + day + "|" + (int)Math.floor(receipt.total);
+
+        return id;
     }
 
     public void uploadReceipt() {
@@ -124,15 +205,9 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
 
         Toast.makeText(getApplicationContext(), "Uploading receipt...", Toast.LENGTH_SHORT).show();
 
-        // Get the user input to construct a Receipt object
-        //String[] input = getValues();
 
-        // Construct a Receipt object and write it to the Firebase Databse
-        //int tip = Integer.parseInt(input[1]);
-        //int tax = Integer.parseInt(input[2]);
-        //int total = Integer.parseInt(input[3]);
-        final ArrayList<String> folders = new ArrayList<>();
-        folders.add("June 2017");
+        //final ArrayList<String> folders = new ArrayList<>();
+        //folders.add("June 2017");
 
 
         // Upload the receipt object
@@ -141,30 +216,72 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
         // Upload the image of the receipt if the user took a picture of it
         if (imageBytes != null) {
 
+            String[] input = getValues();
+
             Calendar cal = Calendar.getInstance();
-            StorageReference userRef = storageRef.child("Users").child(fireyUser.getUid()).child("Jcrew" + cal.get(Calendar.DATE));
+            StorageReference userRef = storageRef.child("Users").child(fireyUser.getUid()).child(input[0] + cal.get(Calendar.DATE));
             UploadTask uploadTask = userRef.putBytes(imageBytes);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 @SuppressWarnings("VisibleForTests")
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    // Get the user input to construct a Receipt object
+                    String[] input = getValues();
+
+                    // Construct a Receipt object and write it to the Firebase Databse
+                    double tip = Double.parseDouble(input[1]);
+                    double tax = Double.parseDouble(input[2]);
+                    double total = Double.parseDouble(input[3]);
+
+                    // Use a helper method to get the parsed list of folders
+                    ArrayList<String> folders = parseFolders(input[4]);
+
                     // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                     photoPath = taskSnapshot.getDownloadUrl();
 
-                    Receipt receipt = new Receipt("Jcrew", 0, 0, 12, folders, photoPath.toString());
+                    Receipt receipt = new Receipt(input[0], tip, tax, total, folders, photoPath.toString());
 
-                    if (photoPath != null) {
-                        receipt.photoPath = photoPath.toString();
-                        databaseReference.child("Receipts").child(fireyUser.getUid()).setValue(receipt);
-
+                    if (photoPath == null) {
+                        receipt.photoPath = "";
                     }
+
+                    String receipt_id = generateID(receipt);
+                    Log.e("HERE",receipt_id);
+                    databaseReference.child("Receipts").child(fireyUser.getUid()).child(receipt_id)
+                            .setValue(receipt, new DatabaseReference.CompletionListener() {
+
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+
+                            if (databaseError == null)
+                                finish();
+                        }
+                    });
                 }
             });
         }
         else {
-            Receipt receipt = new Receipt("J Crew", 0, 0, 12, folders, "not found");
-            databaseReference.child("Receipts").child(fireyUser.getUid()).setValue(receipt);
+
+            // Get the user input to construct a Receipt object
+            String[] input = getValues();
+
+            // Construct a Receipt object and write it to the Firebase Databse
+            int tip = Integer.parseInt(input[1]);
+            int tax = Integer.parseInt(input[2]);
+            int total = Integer.parseInt(input[3]);
+
+            // Use a helper method to get the parsed list of folders
+            ArrayList<String> folders = parseFolders(input[4]);
+
+            Receipt receipt = new Receipt(input[0], tip, tax, total, folders, "not found");
+            String receipt_id = generateID(receipt);
+
+            databaseReference.child("Receipts").child(fireyUser.getUid()).child(receipt_id)
+                    .setValue(receipt);
         }
+
+        //finish();
     }
 
     @Override
