@@ -61,18 +61,19 @@ public class fragment_homepage extends Fragment {
                 User user= dataSnapshot.getValue(User.class);
 
                 // Parse the User's information to get the User's name
-                String name = user.userName;
-                if (name == null) {
-                    name = "";
-                }
-                else {
-                    int spaceIndex = name.indexOf(" ");
-                    if (spaceIndex != -1)
-                        name = name.substring(0, spaceIndex);
-                }
+                if (user != null) {
+                    String name = user.userName;
+                    if (name == null) {
+                        name = "";
+                    } else {
+                        int spaceIndex = name.indexOf(" ");
+                        if (spaceIndex != -1)
+                            name = name.substring(0, spaceIndex);
+                    }
 
-                String currGreeting = "Hello, ";
-                greeting.setText((currGreeting + " " + name));
+                    String currGreeting = "Hello, ";
+                    greeting.setText((currGreeting + " " + name));
+                }
             }
 
             @Override

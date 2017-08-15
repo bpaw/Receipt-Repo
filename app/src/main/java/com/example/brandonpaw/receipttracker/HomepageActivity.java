@@ -22,9 +22,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
 
 import static android.graphics.Paint.ANTI_ALIAS_FLAG;
+
+class Account{
+
+    private String username;
+    private String email;
+    private String password;
+    private String folders;
+}
 
 public class HomepageActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -78,6 +92,9 @@ public class HomepageActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         displaySelectedScreen(R.id.nav_home);
+
+        UtilREST utilRest = new UtilREST(this);
+        utilRest.getAllAccounts();
     }
 
     @Override

@@ -98,7 +98,7 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 // Get the User's information
-                User user = dataSnapshot.getValue(User.class);
+                User user = dataSnapshot.child("Users").child(firebaseAuth.getCurrentUser().getUid()).getValue(User.class);
 
                 suggestions = user.folders;
 
@@ -115,10 +115,6 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
             }
         };
         databaseReference.addValueEventListener(postListener);
-
-
-
-        //mImageView = (ImageView) findViewById(R.id.testerImageView);
     }
 
     public boolean requiredFieldsFilled() {
@@ -205,11 +201,6 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
 
         Toast.makeText(getApplicationContext(), "Uploading receipt...", Toast.LENGTH_SHORT).show();
 
-
-        //final ArrayList<String> folders = new ArrayList<>();
-        //folders.add("June 2017");
-
-
         // Upload the receipt object
         fireyUser = firebaseAuth.getCurrentUser();
 
@@ -280,8 +271,6 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
             databaseReference.child("Receipts").child(fireyUser.getUid()).child(receipt_id)
                     .setValue(receipt);
         }
-
-        //finish();
     }
 
     @Override
@@ -312,7 +301,6 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
 
                             }
                         }).show();
-
                 break;
         }
     }
@@ -338,6 +326,5 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
 
             uploadReceipt();
         }
-
     }
 }

@@ -6,11 +6,19 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -19,8 +27,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignupActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -70,9 +83,9 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 
         if (view == signUpButton) {
 
-            String name = nameEditText.getText().toString().trim();
-            String email = emailEditText.getText().toString().trim();
-            String password = passwordEditText.getText().toString().trim();
+            final String name = nameEditText.getText().toString().trim();
+            final String email = emailEditText.getText().toString().trim();
+            final String password = passwordEditText.getText().toString().trim();
             String passwordC = passwordConfirmedEditText.getText().toString().trim();
 
             if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email)||
@@ -85,40 +98,58 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 
                 progressDialog.setMessage("Registering User...");
                 progressDialog.show();
+                JSONObject data = new JSONObject();
+                try {
+                    data.put("username", name);
+                    data.put("password", password);
+                    data.put("email", email);
+                    data.put("folders", null);
+                }
+                catch (JSONException e) {
+                    Log.e("SignupActivity.java: ", e.toString());
+                }
+                RequestQueue queue = Volley.newRequestQueue(SignupActivity.this);
+                JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,
+                        "http://192.168.0.1:8080/ReceiptRepoREST/rest/accounts/", data,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        Toast.makeText(SignupActivity.this, "Register successful", Toast.LENGTH_SHORT).show();
 
-                firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressDialog.dismiss();
+                                        Intent homepageIntent = new Intent(getApplicationContext(), HomepageActivity.class);
+                                        startActivity(homepageIntent);
 
+                                        String name = nameEditText.getText().toString().trim();
+                                        ArrayList<String> folders = new ArrayList<>();
 
-                        if (task.isSuccessful()) {
-                            // Start the homepage activity
-                            Toast.makeText(SignupActivity.this, "Register successful", Toast.LENGTH_SHORT).show();
+                                        // Get the current
+                                        Calendar c = Calendar.getInstance();
+                                        int month = c.get(Calendar.MONTH);
+                                        String year = String.valueOf(c.get(Calendar.YEAR));
+                                        String initialFolder = months[month] + " " + year;
+                                        User UserInformation = new User(name, folders);
+                                        folders.add(initialFolder);
 
-                            finish();
-                            Intent homepageIntent = new Intent(getApplicationContext(), HomepageActivity.class);
-                            startActivity(homepageIntent);
+//                                        fireyUser = firebaseAuth.getCurrentUser();
+//                                        databaseReference.child("Users").child(fireyUser.getUid()).setValue(UserInformation);
 
-                            String name = nameEditText.getText().toString().trim();
-                            ArrayList<String> folders = new ArrayList<>();
+                                        finish();
+                                    }
+                                });
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(SignupActivity.this,
+                                        "Uh oh! It seems an error has occurred while attempting to register your account.",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        });
 
-                            // Get the current
-                            Calendar c = Calendar.getInstance();
-                            int month = c.get(Calendar.MONTH);
-                            String year = String.valueOf(c.get(Calendar.YEAR));
-                            String initialFolder = months[month] + " " + year;
-                            User UserInformation = new User(name, folders);
-                            folders.add(initialFolder);
-
-                            fireyUser = firebaseAuth.getCurrentUser();
-                            databaseReference.child("Users").child(fireyUser.getUid()).setValue(UserInformation);
-                        }
-                        else {
-                            Toast.makeText(SignupActivity.this, "Could not register, please try again", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                queue.add(request);
             }
         }
     }
