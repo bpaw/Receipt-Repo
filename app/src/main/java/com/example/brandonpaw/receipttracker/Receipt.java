@@ -2,6 +2,9 @@ package com.example.brandonpaw.receipttracker;
 
 import android.net.Uri;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 /**
@@ -15,6 +18,7 @@ public class Receipt {
     public double tip;
     public double tax;
     public double total;
+    public String date;
     public ArrayList<String> folders;
     public String photoPath;
 
@@ -31,5 +35,20 @@ public class Receipt {
             folders.add(folder);
         }
         this.photoPath = path;
+    }
+
+    public static Receipt JSONtoReceipt(JSONObject json) throws JSONException {
+        Receipt convertedRec = new Receipt();
+        convertedRec.receipt = json.getString("receipt");
+        convertedRec.date = json.getString("date");
+        convertedRec.total = json.getDouble("total");
+        convertedRec.tip = json.getDouble("tip");
+        convertedRec.tax = json.getDouble("tax");
+        return convertedRec;
+    }
+
+    @Override
+    public String toString() {
+        return receipt;
     }
 }

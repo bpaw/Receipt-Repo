@@ -6,4 +6,5 @@
     <color name="background">#37474f</color>
     <color name="button_background">#009688</color>
     <color name="myWhite">#EEEEEE</color>
+    <color name="teal">#009688</color>
 </resources>

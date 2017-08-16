@@ -11,6 +11,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -29,6 +31,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.graphics.Paint.ANTI_ALIAS_FLAG;
 
@@ -53,6 +58,8 @@ public class HomepageActivity extends AppCompatActivity
     int FOLDERS = 3;
     int STATS = 4;
 
+    public static UtilREST utilRest;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,13 +71,13 @@ public class HomepageActivity extends AppCompatActivity
         firebaseAuth = FirebaseAuth.getInstance();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setImageBitmap(textAsBitmap("+", 18, Color.WHITE));
+        fab.setImageBitmap(textAsBitmap("+", 22, Color.WHITE));
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 if (FAB == HOME || FAB == RECEIPTS) {
-                    // Start a new Activity to add a receipt
+                    // Start a new Activity to add a view_receipt
                     Intent addReceiptActivity = new Intent(getApplicationContext(), addReceipt.class);
                     startActivity(addReceiptActivity);
                 }
@@ -83,6 +90,7 @@ public class HomepageActivity extends AppCompatActivity
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.setScrimColor(Color.parseColor("#009688"));
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -93,8 +101,10 @@ public class HomepageActivity extends AppCompatActivity
 
         displaySelectedScreen(R.id.nav_home);
 
-        UtilREST utilRest = new UtilREST(this);
-        utilRest.getAllAccounts();
+        utilRest = new UtilREST(this);
+//        utilRest.getAllAccounts();
+        utilRest.getAllReceipts();
+        utilRest.getFolders();
     }
 
     @Override
@@ -185,8 +195,11 @@ public class HomepageActivity extends AppCompatActivity
                 FAB = HOME;
                 break;
             case R.id.nav_receipts:
+
+
                 fragment = new fragment_receipt();
                 title = "Receipts";
+
                 FAB = RECEIPTS;
                 break;
             case R.id.nav_folders:

@@ -93,28 +93,28 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
         // Initialize the suggestions field
 
         // Add a ValueEventListener to get the User's name
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                // Get the User's information
-                User user = dataSnapshot.child("Users").child(firebaseAuth.getCurrentUser().getUid()).getValue(User.class);
-
-                suggestions = user.folders;
-
-                // Set the suggestions for our MultiAutoCompleteTeView for the folders information
-                MultiAutoCompleteTextView folderSuggestions = (MultiAutoCompleteTextView) findViewById(R.id.add_folders);
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.suggestion, suggestions);
-                folderSuggestions.setAdapter(adapter);
-                folderSuggestions.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-        databaseReference.addValueEventListener(postListener);
+//        ValueEventListener postListener = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                // Get the User's information
+//                User user = dataSnapshot.child("Users").child(firebaseAuth.getCurrentUser().getUid()).getValue(User.class);
+//
+////                suggestions = user.folders;
+//
+//                // Set the suggestions for our MultiAutoCompleteTeView for the folders information
+//                MultiAutoCompleteTextView folderSuggestions = (MultiAutoCompleteTextView) findViewById(R.id.add_folders);
+//                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.suggestion, suggestions);
+//                folderSuggestions.setAdapter(adapter);
+//                folderSuggestions.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        };
+//        databaseReference.addValueEventListener(postListener);
     }
 
     public boolean requiredFieldsFilled() {
@@ -199,12 +199,12 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
             return;
         }
 
-        Toast.makeText(getApplicationContext(), "Uploading receipt...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Uploading view_receipt...", Toast.LENGTH_SHORT).show();
 
-        // Upload the receipt object
+        // Upload the view_receipt object
         fireyUser = firebaseAuth.getCurrentUser();
 
-        // Upload the image of the receipt if the user took a picture of it
+        // Upload the image of the view_receipt if the user took a picture of it
         if (imageBytes != null) {
 
             String[] input = getValues();
@@ -281,7 +281,7 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
         switch(id) {
             case R.id.button_continue:
 
-                String prompt = "Would you like to upload a picture of your receipt?";
+                String prompt = "Would you like to upload a picture of your view_receipt?";
                 new AlertDialog.Builder(this)
                         .setTitle("Upload a picture?")
                         .setMessage(prompt)

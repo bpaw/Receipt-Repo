@@ -110,7 +110,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 RequestQueue queue = Volley.newRequestQueue(SignupActivity.this);
                 JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,
-                        "http://192.168.0.1:8080/ReceiptRepoREST/rest/accounts/", data,
+                        "http://192.168.0.9:8080/rest/accounts/", data,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
@@ -143,6 +143,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                         }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
+                                progressDialog.dismiss();
                                 Toast.makeText(SignupActivity.this,
                                         "Uh oh! It seems an error has occurred while attempting to register your account.",
                                         Toast.LENGTH_LONG).show();
