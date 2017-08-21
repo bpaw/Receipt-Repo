@@ -39,6 +39,7 @@ import static android.graphics.Paint.ANTI_ALIAS_FLAG;
 
 class Account{
 
+    private Long rid;
     private String username;
     private String email;
     private String password;
