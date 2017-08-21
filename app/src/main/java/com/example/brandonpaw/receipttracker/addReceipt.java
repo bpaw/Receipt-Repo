@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.MultiAutoCompleteTextView;
@@ -39,6 +40,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class addReceipt extends AppCompatActivity  implements View.OnClickListener {
@@ -51,6 +53,7 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
     EditText inputTax;
     EditText inputTotal;
     EditText inputFolders;
+    DatePicker inputDate;
 
     // Button to mark adding receipts
     Button add;
@@ -86,6 +89,7 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
         inputTax = (EditText) findViewById(R.id.add_tax);
         inputTotal = (EditText) findViewById(R.id.add_total);
         inputFolders = (MultiAutoCompleteTextView) findViewById(R.id.add_folders);
+        inputDate = (DatePicker) findViewById(R.id.add_date);
         add = (Button) findViewById(R.id.button_continue);
 
         add.setOnClickListener(this);
@@ -193,13 +197,17 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
 
     public void uploadReceipt() {
 
-        // Error check the fields
-        if (!requiredFieldsFilled()) {
-            Toast.makeText(this, "Fill out all required fields...", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        Log.e("BPAW", "Calling uploadReceipt");
 
-        Toast.makeText(getApplicationContext(), "Uploading view_receipt...", Toast.LENGTH_SHORT).show();
+        // Error check the fields
+//        if (!requiredFieldsFilled()) {
+//            Toast.makeText(this, "Fill out all required fields...", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+
+        Log.e("BPAW", "1");
+//        Toast.makeText(getApplicationContext(), "Uploading view_receipt...", Toast.LENGTH_SHORT).show();
+        Log.e("BPAW", "2");
 
         // Upload the view_receipt object
         fireyUser = firebaseAuth.getCurrentUser();
@@ -209,16 +217,16 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
 
             String[] input = getValues();
 
-            Calendar cal = Calendar.getInstance();
-            StorageReference userRef = storageRef.child("Users").child(fireyUser.getUid()).child(input[0] + cal.get(Calendar.DATE));
-            UploadTask uploadTask = userRef.putBytes(imageBytes);
-            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                @SuppressWarnings("VisibleForTests")
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//            Calendar cal = Calendar.getInstance();
+//            StorageReference userRef = storageRef.child("Users").child(fireyUser.getUid()).child(input[0] + cal.get(Calendar.DATE));
+//            UploadTask uploadTask = userRef.putBytes(imageBytes);
+//            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                @Override
+//                @SuppressWarnings("VisibleForTests")
+//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
                     // Get the user input to construct a Receipt object
-                    String[] input = getValues();
+//                    String[] input = getValues();
 
                     // Construct a Receipt object and write it to the Firebase Databse
                     double tip = Double.parseDouble(input[1]);
@@ -229,28 +237,29 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
                     ArrayList<String> folders = parseFolders(input[4]);
 
                     // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                    photoPath = taskSnapshot.getDownloadUrl();
+//                    photoPath = taskSnapshot.getDownloadUrl();
 
-                    Receipt receipt = new Receipt(input[0], tip, tax, total, folders, photoPath.toString());
-
+                    Receipt receipt = new Receipt(input[0], tip, tax, total, folders, "");
+                    UtilREST util = new UtilREST(this);
+                    util.createReceipt(new Long(1), receipt);
                     if (photoPath == null) {
                         receipt.photoPath = "";
                     }
 
-                    String receipt_id = generateID(receipt);
-                    Log.e("HERE",receipt_id);
-                    databaseReference.child("Receipts").child(fireyUser.getUid()).child(receipt_id)
-                            .setValue(receipt, new DatabaseReference.CompletionListener() {
-
-                        @Override
-                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-
-                            if (databaseError == null)
-                                finish();
-                        }
-                    });
-                }
-            });
+//                    String receipt_id = generateID(receipt);
+//                    Log.e("HERE",receipt_id);
+//                    databaseReference.child("Receipts").child(fireyUser.getUid()).child(receipt_id)
+//                            .setValue(receipt, new DatabaseReference.CompletionListener() {
+//
+//                        @Override
+//                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+//
+//                            if (databaseError == null)
+//                                finish();
+//                        }
+//                    });
+//                }
+//            });
         }
         else {
 
@@ -258,18 +267,19 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
             String[] input = getValues();
 
             // Construct a Receipt object and write it to the Firebase Databse
-            int tip = Integer.parseInt(input[1]);
-            int tax = Integer.parseInt(input[2]);
-            int total = Integer.parseInt(input[3]);
+            double tip = Double.parseDouble(input[1]);
+            double tax = Double.parseDouble(input[2]);
+            double total = Double.parseDouble(input[3]);
 
             // Use a helper method to get the parsed list of folders
             ArrayList<String> folders = parseFolders(input[4]);
 
             Receipt receipt = new Receipt(input[0], tip, tax, total, folders, "not found");
-            String receipt_id = generateID(receipt);
-
-            databaseReference.child("Receipts").child(fireyUser.getUid()).child(receipt_id)
-                    .setValue(receipt);
+//            String receipt_id = generateID(receipt);
+            UtilREST util = new UtilREST(this);
+            util.createReceipt(new Long(1), receipt);
+//            databaseReference.child("Receipts").child(fireyUser.getUid()).child(receipt_id)
+//                    .setValue(receipt);
         }
     }
 
@@ -298,7 +308,7 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
+                                uploadReceipt();
                             }
                         }).show();
                 break;

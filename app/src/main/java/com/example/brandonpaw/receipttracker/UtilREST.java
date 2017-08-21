@@ -23,7 +23,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Brandon Paw on 8/13/2017.
@@ -121,5 +123,31 @@ public class UtilREST {
             }
         });
         queue.add(request);
+    }
+
+    public void createReceipt(Long accountId, Receipt newRec) {
+        Log.e("BPAW", "Calling createReceipt in UtilREST");
+        final Long id = accountId;
+        RequestQueue queue = Volley.newRequestQueue(mContext.getApplicationContext());
+        String url = "http://192.168.0.09:8080/ReceiptRepoREST/rest/receipts/";
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.e("BPAW", "\tResponse came back WITHOUT errors");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("BPAW", "\tResponse came back WITH errors");
+            }
+        }) {
+            @Override
+            public Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("accountId", ""+id);
+                return params;
+            }
+        };
+
     }
 }
