@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class Receipt {
 
     // Fields to write to the firebase database
+    public Long rid;
     public String receipt;
     public double tip;
     public double tax;
@@ -44,11 +45,12 @@ public class Receipt {
         convertedRec.total = json.getDouble("total");
         convertedRec.tip = json.getDouble("tip");
         convertedRec.tax = json.getDouble("tax");
+        convertedRec.rid = json.getLong("rid");
         return convertedRec;
     }
 
     @Override
     public String toString() {
-        return receipt;
+        return receipt + " : " + rid;
     }
 }
