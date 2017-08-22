@@ -125,12 +125,15 @@ public class UtilREST {
         queue.add(request);
     }
 
-    public void createReceipt(Long accountId, Receipt newRec) {
+    public void createReceipt(Long accountId, Receipt newRec) throws JSONException {
         Log.e("BPAW", "Calling createReceipt in UtilREST");
         final Long id = accountId;
         RequestQueue queue = Volley.newRequestQueue(mContext.getApplicationContext());
-        String url = "http://192.168.0.09:8080/ReceiptRepoREST/rest/receipts/";
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, new Response.Listener<JSONObject>() {
+        String url = "http://192.168.0.09:8080/ReceiptRepoREST/rest/receipts/" + accountId;
+        JSONObject rec_json = new JSONObject();
+        rec_json.put("receipt", newRec.receipt);
+        rec_json.put("total", newRec.total);
+        JsonObjectRequest request = new JsonObjectRequest(url, rec_json, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.e("BPAW", "\tResponse came back WITHOUT errors");
@@ -140,14 +143,7 @@ public class UtilREST {
             public void onErrorResponse(VolleyError error) {
                 Log.e("BPAW", "\tResponse came back WITH errors");
             }
-        }) {
-            @Override
-            public Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("accountId", ""+id);
-                return params;
-            }
-        };
-
+        });
+        queue.add(request);
     }
 }

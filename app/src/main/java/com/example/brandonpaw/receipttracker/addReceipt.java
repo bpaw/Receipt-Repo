@@ -37,6 +37,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 
+import org.json.JSONException;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -195,7 +197,7 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
         return id;
     }
 
-    public void uploadReceipt() {
+    public void uploadReceipt() throws JSONException {
 
         Log.e("BPAW", "Calling uploadReceipt");
 
@@ -241,7 +243,12 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
 
                     Receipt receipt = new Receipt(input[0], tip, tax, total, folders, "");
                     UtilREST util = new UtilREST(this);
-                    util.createReceipt(new Long(1), receipt);
+                    try {
+                        util.createReceipt(new Long(1), receipt);
+                    }
+                    catch (JSONException e) {
+                        Log.e("BPAW", e.getMessage());
+                    }
                     if (photoPath == null) {
                         receipt.photoPath = "";
                     }
@@ -308,7 +315,11 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                uploadReceipt();
+                                try {
+                                    uploadReceipt();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }).show();
                 break;
@@ -334,7 +345,11 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
             imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             imageBytes = baos.toByteArray();
 
-            uploadReceipt();
+            try {
+                uploadReceipt();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
