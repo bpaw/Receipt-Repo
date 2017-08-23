@@ -54,33 +54,36 @@ public class fragment_receipt extends Fragment {
         }
 
         UtilREST util = new UtilREST(getActivity());
-        util.getAllReceipts(user.rid).addOnSuccessListener(new OnSuccessListener<JSONObject>() {
-            @Override
-            public void onSuccess(JSONObject jsonObject) {
-                try {
-                    JSONArray jsons = jsonObject.getJSONArray("receipts");
-                    if (jsons != null) {
-                        Log.e("BPAW", "JSON ARRAY LENGTH : " + jsons.length());
-                        for (int i = 0; i < jsons.length(); i++) {
-                            Log.e("BPAW", Receipt.JSONtoReceipt(jsons.getJSONObject(i)).toString());
-                            receipt_list.add(Receipt.JSONtoReceipt(jsons.getJSONObject(i)));
-                        }
-                        Log.e("BPAW", "NOW LENGTH IS --- " + receipt_list.size());
-                    }
-                } catch (JSONException e) {
-                    Log.e("BPAW", "EXCEPTION --- " + e.toString());
-                }
-            }
-        });
+        if (PersistentDataSingleton.persistentData.user != null &&
+                PersistentDataSingleton.persistentData.user.rid != null) {
+            util.getAllReceipts(PersistentDataSingleton.persistentData.user.rid).addOnSuccessListener(new OnSuccessListener<JSONObject>() {
+                @Override
+                public void onSuccess(JSONObject jsonObject) {
+                    try {
+                        JSONArray jsons = jsonObject.getJSONArray("receipts");
+                        if (jsons != null) {
+                            Log.e("BPAW", "JSON ARRAY LENGTH : " + jsons.length());
+                            for (int i = 0; i < jsons.length(); i++) {
+                                Log.e("BPAW", Receipt.JSONtoReceipt(jsons.getJSONObject(i)).toString());
+                                receipt_list.add(Receipt.JSONtoReceipt(jsons.getJSONObject(i)));
+                            }
+                            Log.e("BPAW", "NOW LENGTH IS --- " + receipt_list.size());
 
-        if (receipt_list.isEmpty())
-            Toast.makeText(getContext(), "FAILED TO RETRIEVE RECEIPTS", Toast.LENGTH_LONG).show();
-        else {
-            DividerItemDecoration divider = new DividerItemDecoration(mRecyclerView.getContext(),
-                    DividerItemDecoration.VERTICAL);
-            mRecyclerView.addItemDecoration(divider);
-            mRecyclerView.setAdapter(new ReceiptAdapter(receipt_list));
-            mRecyclerView.getAdapter().notifyDataSetChanged();
+                            if (receipt_list.isEmpty())
+                                Toast.makeText(getContext(), "FAILED TO RETRIEVE RECEIPTS", Toast.LENGTH_LONG).show();
+                            else {
+                                DividerItemDecoration divider = new DividerItemDecoration(mRecyclerView.getContext(),
+                                        DividerItemDecoration.VERTICAL);
+                                mRecyclerView.addItemDecoration(divider);
+                                mRecyclerView.setAdapter(new ReceiptAdapter(receipt_list));
+                                mRecyclerView.getAdapter().notifyDataSetChanged();
+                            }
+                        }
+                    } catch (JSONException e) {
+                        Log.e("BPAW", "EXCEPTION --- " + e.toString());
+                    }
+                }
+            });
         }
         return view;
     }
