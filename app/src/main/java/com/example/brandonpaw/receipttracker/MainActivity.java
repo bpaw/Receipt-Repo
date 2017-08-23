@@ -6,22 +6,28 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     // User identification fields
     private Button signUpButton;
     private Button loginButton;
-    private EditText emailEditText;
+    private EditText usernameEditText;
     private EditText passwordEditText;
 
     // Firebase necessary fields
@@ -29,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // Members used for UX
     private ProgressDialog progressDialog;
+
+    public static Account user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // initialize the user identification fields
         signUpButton = (Button) findViewById(R.id.signup_button);
         loginButton = (Button) findViewById(R.id.login_button);
-        emailEditText = (EditText) findViewById(R.id.email_text);
+        usernameEditText = (EditText) findViewById(R.id.username_text);
         passwordEditText = (EditText) findViewById(R.id.password_text);
 
         // Initialize the UX members
@@ -73,11 +81,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (view == loginButton) {
 
             // Get the email and password
-            String email = emailEditText.getText().toString().trim();
-            String password = passwordEditText.getText().toString().trim();
+            String username = usernameEditText.getText().toString().trim();
+            final String password = passwordEditText.getText().toString().trim();
 
             // Both the email and password must have been inputted (non-empty strings)
-            if (TextUtils.isEmpty(email)) {
+            if (TextUtils.isEmpty(username)) {
 
                 return;
             }
@@ -90,26 +98,89 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             progressDialog.setMessage("Logging in, please wait...");
             progressDialog.show();
 
-            // Sign in the user using the email and password
-            firebaseAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-
+            UtilREST util = new UtilREST(this);
+            util.getAccount(username).addOnSuccessListener(new OnSuccessListener<JSONObject>() {
                 @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
+                public void onSuccess(JSONObject jsonObject) {
+                    try {
+                        JSONArray accounts = jsonObject.getJSONArray("accounts");
+                        Log.e("BPAW", "The JSONObect in the response array is : " + accounts.getJSONObject(0).toString());
+                        user = new Account(accounts.getJSONObject(0));
 
-                    progressDialog.dismiss();
+                        if (user == null) {
+                            progressDialog.dismiss();
+                            Toast.makeText(MainActivity.this, "There seems to have been an error trying to log you in", Toast.LENGTH_LONG).show();
+                            return;
+                        }
 
-                    if (task.isSuccessful()) {
-                        Toast.makeText(MainActivity.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
-                        Intent homepageIntent = new Intent(getApplicationContext(), HomepageActivity.class);
-                        finish();
-                        startActivity(homepageIntent);
-                    }
-                    else {
-                        Toast.makeText(MainActivity.this, "Could not login, please try again", Toast.LENGTH_SHORT).show();
+                        // Sign in the user using the email and password
+                        String email = user.email;
+
+                        firebaseAuth.signInWithEmailAndPassword(email, password)
+                                .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                                        progressDialog.dismiss();
+
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(MainActivity.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
+                                            Intent homepageIntent = new Intent(getApplicationContext(), HomepageActivity.class);
+                                            finish();
+                                            startActivity(homepageIntent);
+                                        }
+                                        else {
+                                            Toast.makeText(MainActivity.this, "Could not login, please try again", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 }
             });
         }
+    }
+
+    public void login() {
+        // Get the email and password
+        String email = usernameEditText.getText().toString().trim();
+        String password = passwordEditText.getText().toString().trim();
+
+        // Both the email and password must have been inputted (non-empty strings)
+        if (TextUtils.isEmpty(email)) {
+
+            return;
+        }
+        if (TextUtils.isEmpty(password)) {
+
+            return;
+        }
+
+        // Alert the user that the registration process has begun
+        progressDialog.setMessage("Logging in, please wait...");
+        progressDialog.show();
+
+        // Sign in the user using the email and password
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        progressDialog.dismiss();
+
+                        if (task.isSuccessful()) {
+                            Toast.makeText(MainActivity.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
+                            Intent homepageIntent = new Intent(getApplicationContext(), HomepageActivity.class);
+                            finish();
+                            startActivity(homepageIntent);
+                        }
+                        else {
+                            Toast.makeText(MainActivity.this, "Could not login, please try again", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 }

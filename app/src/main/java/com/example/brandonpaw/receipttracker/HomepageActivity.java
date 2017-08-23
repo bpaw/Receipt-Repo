@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -32,6 +33,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,11 +43,22 @@ import static android.graphics.Paint.ANTI_ALIAS_FLAG;
 
 class Account{
 
-    private Long rid;
-    private String username;
-    private String email;
-    private String password;
-    private String folders;
+    public Long rid;
+    public String username;
+    public String email;
+    public String password;
+    public String folders;
+
+    public Account(JSONObject response) {
+        try {
+            rid = response.getLong("rid");
+            username = response.getString("username");
+            email = response.getString("email");
+            folders = response.getString("folders");
+        } catch (JSONException j) {
+            Log.e("BPAW", "JSON error in Account Constructor : " + j.getMessage());
+        }
+    }
 }
 
 public class HomepageActivity extends AppCompatActivity
@@ -104,8 +119,8 @@ public class HomepageActivity extends AppCompatActivity
 
         utilRest = new UtilREST(this);
 //        utilRest.getAllAccounts();
-        utilRest.getAllReceipts();
-        utilRest.getFolders();
+//        utilRest.getAllReceipts();
+//        utilRest.getFolders();
     }
 
     @Override

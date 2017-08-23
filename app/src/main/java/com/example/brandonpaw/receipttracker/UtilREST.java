@@ -17,6 +17,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,6 +42,41 @@ public class UtilREST {
         this.mContext = context;
     }
 
+    /**
+     *  This is where the GET requests are located
+     */
+
+    public Task<JSONObject> getAccount(final String username) {
+        Log.e("BPAW", "CALLING GET ACCOUNT with " + username);
+        final TaskCompletionSource<JSONObject> source = new TaskCompletionSource<>();
+        final Account[] account = new Account[1];
+        /* TODO : May need to urlencode spaces or restrict usernames to not have spaces in them */
+        RequestQueue queue = Volley.newRequestQueue(mContext.getApplicationContext());
+        String url = "http://192.168.0.9:8080/ReceiptRepoREST/rest/accounts";
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.e("BPAW", "The JSONObject response is : " + response.toString());
+                source.setResult(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                source.setException(error);
+                Log.e("BPAW util 62", error.getMessage());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("username", username);
+                return params;
+            }
+        };
+        queue.add(request);
+        return source.getTask();
+    }
+
     public void getAllAccounts() {
         Log.e("BPAW","CALLING GET ALL ACCOUNTS");
         RequestQueue queue = Volley.newRequestQueue(mContext.getApplicationContext());
@@ -61,10 +97,10 @@ public class UtilREST {
         queue.add(strReq);
     }
 
-    public void getAllReceipts() {
+    public void getAllReceipts(Long rid) {
         Log.e("BPAW", "Calling get all receipts");
         RequestQueue queue = Volley.newRequestQueue(mContext.getApplicationContext());
-        String url = "http://192.168.0.09:8080/ReceiptRepoREST/rest/receipts/account/1";
+        String url = "http://192.168.0.09:8080/ReceiptRepoREST/rest/receipts/account/" + rid;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -95,10 +131,10 @@ public class UtilREST {
         queue.add(request);
     }
 
-    public void getFolders() {
+    public void getFolders(Long rid) {
         Log.e("BPAW", "Calling GET FOLDERS");
         RequestQueue queue = Volley.newRequestQueue(mContext.getApplicationContext());
-        String url = "http://192.168.0.09:8080/ReceiptRepoREST/rest/accounts/folders/1";
+        String url = "http://192.168.0.09:8080/ReceiptRepoREST/rest/accounts/folders/" + rid;
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -124,6 +160,10 @@ public class UtilREST {
         });
         queue.add(request);
     }
+
+    /**
+     *  This is where the POST requests are located
+     */
 
     public void createReceipt(Long accountId, Receipt newRec) throws JSONException {
         Log.e("BPAW", "Calling createReceipt in UtilREST");

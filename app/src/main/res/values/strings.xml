@@ -5,7 +5,7 @@
     <string name="loginButton">Login</string>
     <string name="signUpButton">Sign Up</string>
     <string name="app_logo_content_description">The app\'s logo.</string>
-    <string name="email_text">\ Email Address:</string>
+    <string name="username_text">\ Username:</string>
     <string name="password_text">\ Password:</string>
     <string name="or">or</string>
     <string name="app_logo">Receipt Tracker</string>
