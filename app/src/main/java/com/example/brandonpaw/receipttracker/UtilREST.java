@@ -97,8 +97,9 @@ public class UtilREST {
         queue.add(strReq);
     }
 
-    public void getAllReceipts(Long rid) {
+    public Task<JSONObject> getAllReceipts(Long rid) {
         Log.e("BPAW", "Calling get all receipts");
+        final TaskCompletionSource<JSONObject> source = new TaskCompletionSource<>();
         RequestQueue queue = Volley.newRequestQueue(mContext.getApplicationContext());
         String url = "http://192.168.0.09:8080/ReceiptRepoREST/rest/receipts/account/" + rid;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, new Response.Listener<JSONObject>() {
@@ -106,20 +107,7 @@ public class UtilREST {
             public void onResponse(JSONObject response) {
                 System.out.println("Response is " + response);
                 Log.e("BPAW", "DID NOT ERROR");
-
-                try {
-                    JSONArray jsons = response.getJSONArray("receipts");
-                    if (jsons != null) {
-                        Log.e("BPAW", "JSON ARRAY LENGTH : " + jsons.length());
-                        for (int i = 0; i < jsons.length(); i++) {
-                            Log.e("BPAW", Receipt.JSONtoReceipt(jsons.getJSONObject(i)).toString());
-                            receipts.add(Receipt.JSONtoReceipt(jsons.getJSONObject(i)));
-                        }
-                        Log.e("BPAW", "NOW LENGTH IS --- " + receipts.size());
-                    }
-                } catch (JSONException e) {
-                    Log.e("BPAW", "EXCEPTION --- " + e.toString());
-                }
+                source.setResult(response);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -127,8 +115,8 @@ public class UtilREST {
                 Log.e("BPAW", "ERROR " + error.toString());
             }
         });
-//        receiptsquest.setRetryPolicy(new DefaultRetryPolicy(50000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(request);
+        return source.getTask();
     }
 
     public void getFolders(Long rid) {

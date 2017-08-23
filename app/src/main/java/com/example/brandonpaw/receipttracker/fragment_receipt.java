@@ -6,13 +6,22 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.brandonpaw.receipttracker.MainActivity.user;
 
 
 /**
@@ -22,6 +31,7 @@ public class fragment_receipt extends Fragment {
 
     private RecyclerView mRecyclerView;
 
+    public List<Receipt> receipt_list = new ArrayList<>();
 
     public fragment_receipt() {
         // Required empty public constructor
@@ -44,15 +54,32 @@ public class fragment_receipt extends Fragment {
         }
 
         UtilREST util = new UtilREST(getActivity());
-        List<Receipt> recList2 = HomepageActivity.utilRest.receipts;
+        util.getAllReceipts(user.rid).addOnSuccessListener(new OnSuccessListener<JSONObject>() {
+            @Override
+            public void onSuccess(JSONObject jsonObject) {
+                try {
+                    JSONArray jsons = jsonObject.getJSONArray("receipts");
+                    if (jsons != null) {
+                        Log.e("BPAW", "JSON ARRAY LENGTH : " + jsons.length());
+                        for (int i = 0; i < jsons.length(); i++) {
+                            Log.e("BPAW", Receipt.JSONtoReceipt(jsons.getJSONObject(i)).toString());
+                            receipt_list.add(Receipt.JSONtoReceipt(jsons.getJSONObject(i)));
+                        }
+                        Log.e("BPAW", "NOW LENGTH IS --- " + receipt_list.size());
+                    }
+                } catch (JSONException e) {
+                    Log.e("BPAW", "EXCEPTION --- " + e.toString());
+                }
+            }
+        });
 
-        if (recList2.isEmpty())
+        if (receipt_list.isEmpty())
             Toast.makeText(getContext(), "FAILED TO RETRIEVE RECEIPTS", Toast.LENGTH_LONG).show();
         else {
             DividerItemDecoration divider = new DividerItemDecoration(mRecyclerView.getContext(),
                     DividerItemDecoration.VERTICAL);
             mRecyclerView.addItemDecoration(divider);
-            mRecyclerView.setAdapter(new ReceiptAdapter(recList2));
+            mRecyclerView.setAdapter(new ReceiptAdapter(receipt_list));
             mRecyclerView.getAdapter().notifyDataSetChanged();
         }
         return view;
