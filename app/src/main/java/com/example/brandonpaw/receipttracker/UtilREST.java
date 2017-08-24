@@ -3,6 +3,7 @@ package com.example.brandonpaw.receipttracker;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -153,6 +154,7 @@ public class UtilREST {
         JSONObject rec_json = new JSONObject();
         rec_json.put("receipt", newRec.receipt);
         rec_json.put("total", newRec.total);
+        rec_json.put("photo_bytes", Base64.encode(newRec.photo, Base64.DEFAULT));
         JsonObjectRequest request = new JsonObjectRequest(url, rec_json, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -161,7 +163,7 @@ public class UtilREST {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("BPAW", "\tResponse came back WITH errors");
+                Log.e("BPAW", "\tResponse came back WITH errors : " + error.getMessage());
             }
         });
         queue.add(request);

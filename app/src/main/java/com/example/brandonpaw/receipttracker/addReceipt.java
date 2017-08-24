@@ -242,6 +242,7 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
 //                    photoPath = taskSnapshot.getDownloadUrl();
 
                     Receipt receipt = new Receipt(input[0], tip, tax, total, folders, "");
+                    receipt.photo = imageBytes;
                     UtilREST util = new UtilREST(this);
                     try {
                         util.createReceipt(new Long(1), receipt);
@@ -250,7 +251,7 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
                         Log.e("BPAW", e.getMessage());
                     }
                     if (photoPath == null) {
-                        receipt.photoPath = "";
+//                        receipt.photoPath = "";
                     }
 
 //                    String receipt_id = generateID(receipt);

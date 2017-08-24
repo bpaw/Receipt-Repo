@@ -21,7 +21,7 @@ public class Receipt {
     public double total;
     public String date;
     public ArrayList<String> folders;
-    public String photoPath;
+    public byte[] photo;
 
     public Receipt() {}
 
@@ -35,7 +35,7 @@ public class Receipt {
 
             folders.add(folder);
         }
-        this.photoPath = path;
+//        this.photoPath = path;
     }
 
     public static Receipt JSONtoReceipt(JSONObject json) throws JSONException {
