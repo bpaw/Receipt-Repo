@@ -63,7 +63,7 @@ public class UtilREST {
             @Override
             public void onErrorResponse(VolleyError error) {
                 source.setException(error);
-                Log.e("BPAW util 62", error.getMessage());
+//                Log.e("BPAW util 62", error.getMessage());
             }
         }) {
             @Override
@@ -119,34 +119,26 @@ public class UtilREST {
         return source.getTask();
     }
 
-    public void getFolders(Long rid) {
+    public Task<JSONArray> getFolders(Long rid) {
         Log.e("BPAW", "Calling GET FOLDERS");
+        final TaskCompletionSource source = new TaskCompletionSource();
         RequestQueue queue = Volley.newRequestQueue(mContext.getApplicationContext());
         String url = "http://192.168.0.09:8080/ReceiptRepoREST/rest/accounts/folders/" + rid;
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 Log.e("BPAW", "Folders are : "+response.toString());
-                int len = response.length();
-                if (len > 0) {
-                    for (int i = 0; i < len; i++) {
-                        try {
-                            String folder = response.get(i).toString();
-                            Log.e("BPAW", "The folder is : " + folder);
-                            folders.add(folder);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
+                source.setResult(response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                source.setException(error);
                 Log.e("BPAW", "ERROR GETTING FOLDERS --- " + error.toString());
             }
         });
         queue.add(request);
+        return source.getTask();
     }
 
     /**
