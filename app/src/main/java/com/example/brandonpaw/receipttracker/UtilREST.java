@@ -154,7 +154,10 @@ public class UtilREST {
         JSONObject rec_json = new JSONObject();
         rec_json.put("receipt", newRec.receipt);
         rec_json.put("total", newRec.total);
-        rec_json.put("photo_bytes", Base64.encode(newRec.photo, Base64.DEFAULT));
+        //rec_json.put("photo_bytes", Base64.encode(newRec.photo, Base64.DEFAULT));
+        rec_json.put("photo_bytes", Base64.encodeToString(newRec.photo, Base64.NO_WRAP));
+        Log.e("BPAW", "THE BASE 64 ENCODING" + rec_json.get("photo_bytes").toString());
+        Log.e("BPAW", "THE BASE 64 ENCODING" + Base64.encodeToString(newRec.photo, Base64.NO_WRAP));
         JsonObjectRequest request = new JsonObjectRequest(url, rec_json, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
