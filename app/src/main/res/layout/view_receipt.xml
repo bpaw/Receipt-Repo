@@ -1,55 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
-    android:layout_marginTop="8dp">
-
-    <TextView
-        android:id="@+id/receipt_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="16sp"
-        android:textColor="@color/teal"/>
-
-    <TextView
-        android:id="@+id/receipt_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="12sp"/>
+    android:layout_marginTop="8dp"
+    android:padding="6dp"
+    android:background="@color/teal"
+    android:weightSum="5">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:weightSum="3">
-
-        <TextView
-            android:id="@+id/receipt_total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="TextView" />
-
-        <TextView
-            android:id="@+id/receipt_tip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="TextView" />
-
-        <TextView
-            android:id="@+id/receipt_tax"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="TextView" />
+        android:layout_weight=".75">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:src="@drawable/logo_white"/>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:layout_weight="2.75"
+        android:weightSum="2"
+        android:padding="6dp">
+            <TextView
+                android:id="@+id/receipt_title"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Receipt"
+                android:textSize="24sp"
+                android:gravity="bottom"
+                android:textColor="@color/myWhite" />
+
+            <TextView
+                android:id="@+id/receipt_date"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:textColor="#BDBDBD"
+                android:text="date"
+                android:textSize="12sp"/>
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:weightSum="3">-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/receipt_total"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:text="TextView" />-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/receipt_tip"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:text="TextView" />-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/receipt_tax"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:text="TextView" />-->
+        <!--</LinearLayout>-->
+    </LinearLayout>
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.5"
+        android:textColor="@color/myWhite"
+        android:textSize="20sp"
+        android:text="Total: $0"
+        android:gravity="center"/>
     <!--<layer-list-->
         <!--android:layout_height="1dp" android:layout_width="match_parent">-->
         <!--<item android:top="-2dp" android:left="-2dp" android:right="-2dp">-->
