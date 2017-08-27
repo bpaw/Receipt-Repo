@@ -7,4 +7,6 @@
     <color name="button_background">#009688</color>
     <color name="myWhite">#E0E0E0</color>
     <color name="teal">#009688</color>
+    <color name="teal_darker">#00897B</color>
+    <color name="teal_border">#00796B</color>
 </resources>

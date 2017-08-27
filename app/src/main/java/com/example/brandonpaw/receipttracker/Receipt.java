@@ -15,6 +15,7 @@ public class Receipt {
 
     // Fields to write to the firebase database
     public Long rid;
+    Account owner;
     public String receipt;
     public double tip;
     public double tax;
@@ -46,6 +47,7 @@ public class Receipt {
         convertedRec.tip = json.getDouble("tip");
         convertedRec.tax = json.getDouble("tax");
         convertedRec.rid = json.getLong("rid");
+        convertedRec.owner = new Account(json.getJSONObject("owner"));
         return convertedRec;
     }
 
