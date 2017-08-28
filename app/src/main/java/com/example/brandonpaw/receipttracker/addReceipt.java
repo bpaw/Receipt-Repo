@@ -250,9 +250,8 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
                     catch (JSONException e) {
                         Log.e("BPAW", e.getMessage());
                     }
-                    if (photoPath == null) {
-//                        receipt.photoPath = "";
-                    }
+
+                    finish();
 
 //                    String receipt_id = generateID(receipt);
 //                    Log.e("HERE",receipt_id);
