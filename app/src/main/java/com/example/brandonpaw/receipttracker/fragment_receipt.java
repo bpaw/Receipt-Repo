@@ -49,7 +49,10 @@ public class fragment_receipt extends Fragment {
             mRecyclerView = (RecyclerView) view.findViewById(R.id.receipt_recycler);
             if (mRecyclerView != null) {
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                mRecyclerView.setAdapter(new ReceiptAdapter(receipt_list));
+                DividerItemDecoration divider = new DividerItemDecoration(mRecyclerView.getContext(),
+                        DividerItemDecoration.VERTICAL);
+                mRecyclerView.addItemDecoration(divider);
+                mRecyclerView.setAdapter(new ReceiptAdapter(receipt_list, getActivity()));
             }
             else
                 System.out.println("mRecyclerView is null");

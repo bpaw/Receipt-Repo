@@ -2,13 +2,16 @@ package com.example.brandonpaw.receipttracker;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
@@ -46,14 +49,15 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptViewHolder> {
 
     private Activity activity;
     private final List<Receipt> receipts;
-    private FirebaseStorage storage;
-    private StorageReference storageRef;
+//    private FirebaseStorage storage;
+//    private StorageReference storageRef;
 
     public ReceiptAdapter(List<Receipt> receipt, Activity activity) {
 
         this.receipts = receipt;
-        storage = FirebaseStorage.getInstance();
-        storageRef = storage.getReference();
+        this.activity = activity;
+//        storage = FirebaseStorage.getInstance();
+//        storageRef = storage.getReference();
     }
 
     @Override
@@ -77,18 +81,29 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptViewHolder> {
 //        holder.tax.setText(""+receipt.tax);
 
         // grab photo from Firebase Storage if it exists
-        StorageReference  userRef = storageRef.child("users")
-                .child(Long.toString(receipt.owner.rid)).
-                child(Long.toString(receipt.rid));
-        Task<Uri> downloadURL = userRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso
-                        .with(activity.getBaseContext())
-                        .load(uri)
-                        .into(holder.photo);
-            }
-        });
+        Log.e("RECEIPT ADDRESS", "user/" + Long.toString(receipt.owner.rid) + "/" + Long.toString(receipt.rid));
+//        StorageReference  userRef = storageRef.child("user")
+//                .child(Long.toString(receipt.owner.rid))
+//                .child(Long.toString(receipt.rid));
+//        Task<Uri> downloadURL = userRef.getDownloadUrl()
+//                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                    @Override
+//                    public void onSuccess(Uri uri) {
+//                        if (uri != null) {
+//                            Log.e("RECEIPT LOADING", "An image came back NON-NULL");
+//                        Picasso
+//                                .with(activity.getBaseContext())
+//                                .load(uri)
+//                                .into(holder.photo);
+//                       }
+//
+//                    }})
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.e("BPAW","FAILURE TRYING TO DOWNLOAD URL FROM FIREBASE" + e.getMessage());
+//                    }
+//                });
         System.out.println("Done Binding");
     }
 

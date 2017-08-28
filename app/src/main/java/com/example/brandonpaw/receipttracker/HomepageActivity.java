@@ -50,8 +50,20 @@ class Account{
     public String folders;
 
     public Account(JSONObject response) {
+
+        // Depends on whether it's for Account or for Receipt
         try {
             rid = response.getLong("rid");
+        } catch (JSONException e) {
+            try {
+                rid = response.getLong("id");
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
+            e.printStackTrace();
+        }
+
+        try {
             username = response.getString("username");
             email = response.getString("email");
             folders = response.getString("folders");

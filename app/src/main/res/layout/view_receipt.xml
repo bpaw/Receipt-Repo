@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
-    android:layout_marginTop="8dp"
     android:padding="6dp"
     android:background="@color/teal_darker"
     android:weightSum="5">
