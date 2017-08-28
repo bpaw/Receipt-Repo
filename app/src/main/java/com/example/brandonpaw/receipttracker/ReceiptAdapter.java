@@ -74,9 +74,11 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptViewHolder> {
 
         Receipt receipt = receipts.get(position);
 
-        holder.receipt.setText(receipt.receipt);
-        holder.date.setText(receipt.date);
-        holder.total.setText(""+receipt.total);
+        if (receipt.receipt != null) holder.receipt.setText(receipt.receipt);
+        if (receipt.date != null) holder.date.setText(receipt.date);
+        String total = Double.toString(receipt.total);
+        if (total.endsWith(".0")) total = total.substring(0, total.length() - 2);
+        holder.total.setText("Total: $" + total);
 //        holder.tip.setText(""+receipt.tip);
 //        holder.tax.setText(""+receipt.tax);
 

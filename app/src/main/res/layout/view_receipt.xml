@@ -79,8 +79,8 @@
         android:layout_height="match_parent"
         android:layout_weight="1.5"
         android:textColor="@color/myWhite"
-        android:textSize="20sp"
-        android:text="Total: $0"
+        android:textSize="16sp"
+        android:text="Total: $"
         android:gravity="center"/>
 </LinearLayout>
 <!--<layer-list-->
