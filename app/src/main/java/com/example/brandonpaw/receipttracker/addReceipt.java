@@ -178,23 +178,8 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
         return individualFolders;
     }
 
-    private String generateID(Receipt receipt) {
-
-        Calendar cal = Calendar.getInstance();
-        String month = String.valueOf(cal.get(Calendar.MONTH));
-        String day = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
-
-        if (month.length() < 2) {
-            month = "0" + month;
-        }
-
-        if (day.length() < 2) {
-            day = "0" + day;
-        }
-
-        String id = receipt.receipt + "|" + cal.get(Calendar.YEAR) + month + day + "|" + (int)Math.floor(receipt.total);
-
-        return id;
+    private String dateFormatter(DatePicker date) {
+        return (date.getYear() + "-" + (date.getMonth() + 1) + "-" + date.getDayOfMonth());
     }
 
     public void uploadReceipt() throws JSONException {
@@ -207,9 +192,6 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
 //            return;
 //        }
 
-        Log.e("BPAW", "1");
-//        Toast.makeText(getApplicationContext(), "Uploading view_receipt...", Toast.LENGTH_SHORT).show();
-        Log.e("BPAW", "2");
 
         // Upload the view_receipt object
         fireyUser = firebaseAuth.getCurrentUser();
@@ -219,54 +201,24 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
 
             String[] input = getValues();
 
-//            Calendar cal = Calendar.getInstance();
-//            StorageReference userRef = storageRef.child("Users").child(fireyUser.getUid()).child(input[0] + cal.get(Calendar.DATE));
-//            UploadTask uploadTask = userRef.putBytes(imageBytes);
-//            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                @Override
-//                @SuppressWarnings("VisibleForTests")
-//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+            // Construct a Receipt object and write it to the Firebase Databse
+            double tip = Double.parseDouble(input[1]);
+            double tax = Double.parseDouble(input[2]);
+            double total = Double.parseDouble(input[3]);
 
-                    // Get the user input to construct a Receipt object
-//                    String[] input = getValues();
+            Log.e("BPAW", "the date is " + dateFormatter(inputDate));
 
-                    // Construct a Receipt object and write it to the Firebase Databse
-                    double tip = Double.parseDouble(input[1]);
-                    double tax = Double.parseDouble(input[2]);
-                    double total = Double.parseDouble(input[3]);
+            Receipt receipt = new Receipt(input[0], tip, tax, total, input[4], dateFormatter(inputDate));
+            receipt.photo = imageBytes;
+            UtilREST util = new UtilREST(this);
+            try {
+                util.createReceipt(new Long(1), receipt);
+            }
+            catch (JSONException e) {
+                Log.e("BPAW", e.getMessage());
+            }
 
-                    // Use a helper method to get the parsed list of folders
-//                    ArrayList<String> folders = parseFolders(input[4]);
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-//                    photoPath = taskSnapshot.getDownloadUrl();
-            Log.e("BPAW", "the folders are " + input[4]);
-
-                    Receipt receipt = new Receipt(input[0], tip, tax, total, input[4], "");
-                    receipt.photo = imageBytes;
-                    UtilREST util = new UtilREST(this);
-                    try {
-                        util.createReceipt(new Long(1), receipt);
-                    }
-                    catch (JSONException e) {
-                        Log.e("BPAW", e.getMessage());
-                    }
-
-                    finish();
-
-//                    String receipt_id = generateID(receipt);
-//                    Log.e("HERE",receipt_id);
-//                    databaseReference.child("Receipts").child(fireyUser.getUid()).child(receipt_id)
-//                            .setValue(receipt, new DatabaseReference.CompletionListener() {
-//
-//                        @Override
-//                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//
-//                            if (databaseError == null)
-//                                finish();
-//                        }
-//                    });
-//                }
-//            });
+            finish();
         }
         else {
 
@@ -278,13 +230,9 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
             double tax = Double.parseDouble(input[2]);
             double total = Double.parseDouble(input[3]);
 
-
-            Receipt receipt = new Receipt(input[0], tip, tax, total, input[4], "not found");
-//            String receipt_id = generateID(receipt);
+            Receipt receipt = new Receipt(input[0], tip, tax, total, input[4], dateFormatter(inputDate));
             UtilREST util = new UtilREST(this);
             util.createReceipt(new Long(1), receipt);
-//            databaseReference.child("Receipts").child(fireyUser.getUid()).child(receipt_id)
-//                    .setValue(receipt);
         }
     }
 
