@@ -151,9 +151,7 @@ public class UtilREST {
         final Long id = accountId;
         RequestQueue queue = Volley.newRequestQueue(mContext.getApplicationContext());
         String url = "http://192.168.0.09:8080/ReceiptRepoREST/rest/receipts/" + accountId;
-        JSONObject rec_json = new JSONObject();
-        rec_json.put("receipt", newRec.receipt);
-        rec_json.put("total", newRec.total);
+        JSONObject rec_json = Receipt.ReceiptToJSON(newRec);
         //rec_json.put("photo_bytes", Base64.encode(newRec.photo, Base64.DEFAULT));
         rec_json.put("photo_bytes", Base64.encodeToString(newRec.photo, Base64.NO_WRAP));
         Log.e("BPAW", "THE BASE 64 ENCODING" + rec_json.get("photo_bytes").toString());

@@ -236,12 +236,12 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
                     double total = Double.parseDouble(input[3]);
 
                     // Use a helper method to get the parsed list of folders
-                    ArrayList<String> folders = parseFolders(input[4]);
-
+//                    ArrayList<String> folders = parseFolders(input[4]);
                     // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
 //                    photoPath = taskSnapshot.getDownloadUrl();
+            Log.e("BPAW", "the folders are " + input[4]);
 
-                    Receipt receipt = new Receipt(input[0], tip, tax, total, folders, "");
+                    Receipt receipt = new Receipt(input[0], tip, tax, total, input[4], "");
                     receipt.photo = imageBytes;
                     UtilREST util = new UtilREST(this);
                     try {
@@ -278,10 +278,8 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
             double tax = Double.parseDouble(input[2]);
             double total = Double.parseDouble(input[3]);
 
-            // Use a helper method to get the parsed list of folders
-            ArrayList<String> folders = parseFolders(input[4]);
 
-            Receipt receipt = new Receipt(input[0], tip, tax, total, folders, "not found");
+            Receipt receipt = new Receipt(input[0], tip, tax, total, input[4], "not found");
 //            String receipt_id = generateID(receipt);
             UtilREST util = new UtilREST(this);
             util.createReceipt(new Long(1), receipt);
