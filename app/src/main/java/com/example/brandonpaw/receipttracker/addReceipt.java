@@ -55,6 +55,7 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
     EditText inputTax;
     EditText inputTotal;
     EditText inputFolders;
+    EditText inputDescription;
     DatePicker inputDate;
 
     // Button to mark adding receipts
@@ -91,6 +92,7 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
         inputTax = (EditText) findViewById(R.id.add_tax);
         inputTotal = (EditText) findViewById(R.id.add_total);
         inputFolders = (MultiAutoCompleteTextView) findViewById(R.id.add_folders);
+        inputDescription = (EditText) findViewById(R.id.add_description);
         inputDate = (DatePicker) findViewById(R.id.add_date);
         add = (Button) findViewById(R.id.button_continue);
 
@@ -205,10 +207,9 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
             double tip = Double.parseDouble(input[1]);
             double tax = Double.parseDouble(input[2]);
             double total = Double.parseDouble(input[3]);
+            String description = inputDescription.getText().toString().trim();
 
-            Log.e("BPAW", "the date is " + dateFormatter(inputDate));
-
-            Receipt receipt = new Receipt(input[0], tip, tax, total, input[4], dateFormatter(inputDate));
+            Receipt receipt = new Receipt(input[0], tip, tax, total, input[4], dateFormatter(inputDate), description);
             receipt.photo = imageBytes;
             UtilREST util = new UtilREST(this);
             try {
@@ -229,9 +230,10 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
             double tip = Double.parseDouble(input[1]);
             double tax = Double.parseDouble(input[2]);
             double total = Double.parseDouble(input[3]);
+            String description = inputDescription.getText().toString().trim();
 
 //            Receipt receipt = new Receipt(input[0], tip, tax, total, input[4], dateFormatter(inputDate));
-            Receipt receipt = new Receipt(input[0], tip, tax, total, input[4], dateFormatter(inputDate));
+            Receipt receipt = new Receipt(input[0], tip, tax, total, input[4], dateFormatter(inputDate), description);
             UtilREST util = new UtilREST(this);
             util.createReceipt(new Long(1), receipt);
         }

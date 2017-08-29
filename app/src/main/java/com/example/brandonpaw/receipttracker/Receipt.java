@@ -27,13 +27,14 @@ public class Receipt {
 
     public Receipt() {}
 
-    public Receipt(String receipt, double tip, double tax, double total, String input_folders, String date) {
+    public Receipt(String receipt, double tip, double tax, double total, String input_folders, String date, String description) {
         this.receipt = receipt;
         this.tip = tip;
         this.tax = tax;
         this.total = total;
         this.folders = input_folders;
         this.date = date;
+        this.description = description;
     }
 
     public static Receipt JSONtoReceipt(JSONObject json) throws JSONException {
