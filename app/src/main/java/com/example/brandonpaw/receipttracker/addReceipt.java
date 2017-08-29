@@ -230,6 +230,7 @@ public class addReceipt extends AppCompatActivity  implements View.OnClickListen
             double tax = Double.parseDouble(input[2]);
             double total = Double.parseDouble(input[3]);
 
+//            Receipt receipt = new Receipt(input[0], tip, tax, total, input[4], dateFormatter(inputDate));
             Receipt receipt = new Receipt(input[0], tip, tax, total, input[4], dateFormatter(inputDate));
             UtilREST util = new UtilREST(this);
             util.createReceipt(new Long(1), receipt);
