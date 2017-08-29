@@ -1,13 +1,21 @@
 package com.example.brandonpaw.receipttracker;
 
+import android.app.Activity;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -29,9 +37,11 @@ class FolderViewHolder extends RecyclerView.ViewHolder {
 
 public class FolderAdapter extends RecyclerView.Adapter<FolderViewHolder> {
 
+    private Activity activity;
     private List<String> folders;
 
-    public FolderAdapter(List<String> folders) {
+    public FolderAdapter(List<String> folders, Activity activity) {
+        this.activity = activity;
         this.folders = folders;
     }
 
@@ -43,7 +53,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(FolderViewHolder holder, final int position) {
+    public void onBindViewHolder(final FolderViewHolder holder, final int position) {
 
         holder.folderName.setText(folders.get(position));
         holder.folderButton.setBackgroundColor(Color.parseColor("#009688"));
@@ -51,6 +61,19 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderViewHolder> {
             @Override
             public void onClick(View v) {
                 Toast.makeText(v.getContext(), folders.get(position), Toast.LENGTH_LONG).show();
+                UtilREST util = new UtilREST(activity);
+                util.getFolderReceipts(PersistentDataSingleton.persistentData.user.rid, holder.folderName.getText().toString().trim())
+                    .addOnSuccessListener(new OnSuccessListener<JSONObject>() {
+                        @Override
+                        public void onSuccess(JSONObject jsonObject) {
+                            Log.e("BPAW", "the JSONObject is " + jsonObject.toString());
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("BPAW", "EXCEPTION : " + e.getMessage());
+                    }
+                });
             }
         });
     }

@@ -46,7 +46,7 @@ public class fragment_folders extends Fragment {
         if (mRecyclerView == null) {
             mRecyclerView = (RecyclerView) view.findViewById(R.id.folder_recycler);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            mRecyclerView.setAdapter(new FolderAdapter(folders));
+            mRecyclerView.setAdapter(new FolderAdapter(folders, getActivity()));
         }
 
 //        List<String> folders = HomepageActivity.utilRest.folders;

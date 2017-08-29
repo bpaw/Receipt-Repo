@@ -120,6 +120,26 @@ public class UtilREST {
         return source.getTask();
     }
 
+    public Task<JSONObject> getFolderReceipts(Long accountId, String folderName) {
+        Log.e("BPAW", "CALLING GET FOLDER RECEIPTS");
+        final TaskCompletionSource<JSONObject> source = new TaskCompletionSource<>();
+        String url = "http://192.168.0.09:8080/ReceiptRepoREST/rest/accounts/receipts_by_folder/" + accountId + "/" + folderName;
+        RequestQueue queue = Volley.newRequestQueue(mContext.getApplicationContext());
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.e("BPAW", "The resposne is : " + response.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("BPAW", "ERROR: " +  error.getMessage());
+            }
+        });
+        queue.add(request);
+        return source.getTask();
+    }
+
     public Task<JSONArray> getFolders(Long rid) {
         Log.e("BPAW", "Calling GET FOLDERS");
         final TaskCompletionSource source = new TaskCompletionSource();
