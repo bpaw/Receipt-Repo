@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Check if the user is logged in already
         if (firebaseAuth.getCurrentUser() != null) {
-
             // Get information on user from the server
             UtilREST util = new UtilREST(this);
             util.getAccount("bp1").addOnSuccessListener(new OnSuccessListener<JSONObject>() {

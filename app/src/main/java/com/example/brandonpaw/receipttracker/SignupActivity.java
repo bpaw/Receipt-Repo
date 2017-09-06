@@ -133,9 +133,6 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                                         User UserInformation = new User(name, folders);
                                         folders.add(initialFolder);
 
-//                                        fireyUser = firebaseAuth.getCurrentUser();
-//                                        databaseReference.child("Users").child(fireyUser.getUid()).setValue(UserInformation);
-
                                         finish();
                                     }
                                 });
