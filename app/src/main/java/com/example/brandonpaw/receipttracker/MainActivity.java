@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (firebaseAuth.getCurrentUser() != null) {
             // Get information on user from the server
             UtilREST util = new UtilREST(this);
+            if (firebaseAuth.getCurrentUser().getEmail() != null)
+                Toast.makeText(this, firebaseAuth.getCurrentUser().getEmail(), Toast.LENGTH_LONG).show();
             util.getAccount("bp1").addOnSuccessListener(new OnSuccessListener<JSONObject>() {
                 @Override
                 public void onSuccess(JSONObject jsonObject) {
@@ -128,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         // Sign in the user using the email and password
                         String email = user.email;
+                        final String emailUpdate = email;
 
                         firebaseAuth.signInWithEmailAndPassword(email, password)
                                 .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
@@ -138,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         progressDialog.dismiss();
 
                                         if (task.isSuccessful()) {
+                                            firebaseAuth.getCurrentUser().updateEmail(emailUpdate);
                                             Toast.makeText(MainActivity.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
                                             Intent homepageIntent = new Intent(getApplicationContext(), HomepageActivity.class);
                                             finish();

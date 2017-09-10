@@ -119,6 +119,8 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         Toast.makeText(SignupActivity.this, "Register successful", Toast.LENGTH_SHORT).show();
 
+                                        firebaseAuth.getCurrentUser().updateEmail(email);
+
                                         Intent homepageIntent = new Intent(getApplicationContext(), HomepageActivity.class);
                                         startActivity(homepageIntent);
 
