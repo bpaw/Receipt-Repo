@@ -50,8 +50,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (firebaseAuth.getCurrentUser() != null) {
             // Get information on user from the server
             UtilREST util = new UtilREST(this);
-            if (firebaseAuth.getCurrentUser().getEmail() != null)
-                Toast.makeText(this, firebaseAuth.getCurrentUser().getEmail(), Toast.LENGTH_LONG).show();
             util.getAccount(firebaseAuth.getCurrentUser().getEmail()).addOnSuccessListener(new OnSuccessListener<JSONObject>() {
                 @Override
                 public void onSuccess(JSONObject jsonObject) {

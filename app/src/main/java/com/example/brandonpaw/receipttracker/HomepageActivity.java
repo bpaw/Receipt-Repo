@@ -234,11 +234,11 @@ public class HomepageActivity extends AppCompatActivity
                 title = "Folders";
                 FAB = FOLDERS;
                 break;
-            case R.id.nav_stats:
-                fragment = new fragment_statistics();
-                title = "Statistics";
-                FAB = STATS;
-                break;
+//            case R.id.nav_stats:
+//                fragment = new fragment_statistics();
+//                title = "Statistics";
+//                FAB = STATS;
+//                break;
         }
 
         // Replacing the current layout with the specified page's fragment
