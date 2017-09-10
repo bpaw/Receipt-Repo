@@ -88,6 +88,9 @@ public class fragment_receipt extends Fragment {
                     }
                 }
             });
+        } else {
+            Toast.makeText(getContext(), "NEVER CALLED UTILREST", Toast.LENGTH_SHORT).show();
+            Log.e("BPAW", PersistentDataSingleton.persistentData.user.toString());
         }
         return view;
     }

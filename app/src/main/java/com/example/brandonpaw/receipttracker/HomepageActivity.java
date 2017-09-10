@@ -191,7 +191,6 @@ public class HomepageActivity extends AppCompatActivity
                         }
                     })
                     .setNegativeButton(android.R.string.no, null).show();
-
                 break;
         }
 

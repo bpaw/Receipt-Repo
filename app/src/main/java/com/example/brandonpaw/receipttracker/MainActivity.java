@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             UtilREST util = new UtilREST(this);
             if (firebaseAuth.getCurrentUser().getEmail() != null)
                 Toast.makeText(this, firebaseAuth.getCurrentUser().getEmail(), Toast.LENGTH_LONG).show();
-            util.getAccount("bp1").addOnSuccessListener(new OnSuccessListener<JSONObject>() {
+            util.getAccount(firebaseAuth.getCurrentUser().getEmail()).addOnSuccessListener(new OnSuccessListener<JSONObject>() {
                 @Override
                 public void onSuccess(JSONObject jsonObject) {
                     JSONArray accounts = null;
@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public void onSuccess(JSONObject jsonObject) {
                     try {
                         JSONArray accounts = jsonObject.getJSONArray("accounts");
+                        PersistentDataSingleton.persistentData.user = new Account(accounts.getJSONObject(0));
                         Log.e("BPAW", "The JSONObect in the response array is : " + accounts.getJSONObject(0).toString());
                         user = new Account(accounts.getJSONObject(0));
 
@@ -131,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         // Sign in the user using the email and password
                         String email = user.email;
                         final String emailUpdate = email;
-
+                        Log.e("BPAW","The emails are : " + email + " " + emailUpdate);
                         firebaseAuth.signInWithEmailAndPassword(email, password)
                                 .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
 

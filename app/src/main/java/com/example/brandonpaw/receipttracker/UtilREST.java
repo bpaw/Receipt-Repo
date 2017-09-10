@@ -57,7 +57,7 @@ public class UtilREST {
         final Account[] account = new Account[1];
         /* TODO : May need to urlencode spaces or restrict usernames to not have spaces in them */
         RequestQueue queue = Volley.newRequestQueue(mContext.getApplicationContext());
-        String url = "http://192.168.0.9:8080/ReceiptRepoREST/rest/accounts";
+        String url = "http://192.168.0.9:8080/ReceiptRepoREST/rest/accounts?username=" + username;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -102,6 +102,7 @@ public class UtilREST {
     }
 
     public Task<JSONObject> getAllReceipts(Long rid) {
+        Log.e("BPAW", "The rid to grab receipts for is " + rid);
         final TaskCompletionSource<JSONObject> source = new TaskCompletionSource<>();
         RequestQueue queue = Volley.newRequestQueue(mContext.getApplicationContext());
         String url = "http://192.168.0.09:8080/ReceiptRepoREST/rest/receipts/account/" + rid;
