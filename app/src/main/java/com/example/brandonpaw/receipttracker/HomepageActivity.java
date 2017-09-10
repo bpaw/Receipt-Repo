@@ -31,8 +31,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -130,6 +132,14 @@ public class HomepageActivity extends AppCompatActivity
         displaySelectedScreen(R.id.nav_home);
 
         utilRest = new UtilREST(this);
+        utilRest.getDetails(PersistentDataSingleton.persistentData.user.rid).addOnSuccessListener(
+                new OnSuccessListener<JSONArray>() {
+                    @Override
+                    public void onSuccess(JSONArray jsonArray) {
+                        Log.e("BPAW", "The details are in this jsonObject " + jsonArray.toString());
+                    }
+                }
+        );
 //        utilRest.getAllAccounts();
 //        utilRest.getAllReceipts();
 //        utilRest.getFolders();

@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (view == loginButton) {
 
             // Get the email and password
-            String username = usernameEditText.getText().toString().trim();
+            final String username = usernameEditText.getText().toString().trim();
             final String password = passwordEditText.getText().toString().trim();
 
             // Both the email and password must have been inputted (non-empty strings)
@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         progressDialog.dismiss();
 
                                         if (task.isSuccessful()) {
-                                            firebaseAuth.getCurrentUser().updateEmail(emailUpdate);
+
                                             Toast.makeText(MainActivity.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
                                             Intent homepageIntent = new Intent(getApplicationContext(), HomepageActivity.class);
                                             finish();

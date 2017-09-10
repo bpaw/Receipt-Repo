@@ -101,6 +101,28 @@ public class UtilREST {
         queue.add(strReq);
     }
 
+    public Task<JSONArray> getDetails(Long rid) {
+        Log.e("BPAW", "Calling getDetails with rid = " + rid);
+        final TaskCompletionSource<JSONArray> source = new TaskCompletionSource<>();
+        RequestQueue queue = Volley.newRequestQueue(mContext.getApplicationContext());
+        String url = "http://192.168.0.09:8080/ReceiptRepoREST/rest/accounts/details/" + rid;
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                System.out.println("Response is " + response);
+                Log.e("BPAW", "DID NOT ERROR");
+                source.setResult(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("BPAW", "ERROR " + error.toString());
+            }
+        });
+        queue.add(request);
+        return source.getTask();
+    }
+
     public Task<JSONObject> getAllReceipts(Long rid) {
         Log.e("BPAW", "The rid to grab receipts for is " + rid);
         final TaskCompletionSource<JSONObject> source = new TaskCompletionSource<>();
