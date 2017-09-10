@@ -53,35 +53,35 @@ public class fragment_homepage extends Fragment {
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(firebaseUser.getUid());
 
         // Add a ValueEventListener to get the User's name
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                // Get the User's information
-                User user= dataSnapshot.getValue(User.class);
-
-                // Parse the User's information to get the User's name
-                if (user != null) {
-                    String name = user.userName;
-                    if (name == null) {
-                        name = "";
-                    } else {
-                        int spaceIndex = name.indexOf(" ");
-                        if (spaceIndex != -1)
-                            name = name.substring(0, spaceIndex);
-                    }
-
-                    String currGreeting = "Hello, ";
-                    greeting.setText((currGreeting + " " + name));
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-        databaseReference.addValueEventListener(postListener);
+//        ValueEventListener postListener = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                // Get the User's information
+//                User user= dataSnapshot.getValue(User.class);
+//
+//                // Parse the User's information to get the User's name
+//                if (user != null) {
+//                    String name = user.userName;
+//                    if (name == null) {
+//                        name = "";
+//                    } else {
+//                        int spaceIndex = name.indexOf(" ");
+//                        if (spaceIndex != -1)
+//                            name = name.substring(0, spaceIndex);
+//                    }
+//
+//                    String currGreeting = "Hello, ";
+//                    greeting.setText((currGreeting + " " + name));
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        };
+//        databaseReference.addValueEventListener(postListener);
 
         return view;
     }

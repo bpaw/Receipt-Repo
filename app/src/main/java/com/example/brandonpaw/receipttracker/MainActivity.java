@@ -17,6 +17,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,27 +51,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Initialize the Firebase member(s)
         firebaseAuth = FirebaseAuth.getInstance();
-
-        // Check if the user is logged in already
         if (firebaseAuth.getCurrentUser() != null) {
-            // Get information on user from the server
-            UtilREST util = new UtilREST(this);
-            util.getAccount(firebaseAuth.getCurrentUser().getEmail()).addOnSuccessListener(new OnSuccessListener<JSONObject>() {
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance()
+                    .getReference()
+                    .child("Users")
+                    .child(firebaseAuth.getCurrentUser().getUid());
+
+            ValueEventListener postListener = new ValueEventListener() {
                 @Override
-                public void onSuccess(JSONObject jsonObject) {
-                    JSONArray accounts = null;
-                    try {
-                        accounts = jsonObject.getJSONArray("accounts");
-                        PersistentDataSingleton.persistentData.user = new Account(accounts.getJSONObject(0));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    // Get the User's information
+                    Account user = dataSnapshot.getValue(Account.class);
+
+                    // Parse the User's information to get the User's name
+                    if (user != null) {
+                        String name = user.username;
+                        if (name != null) {
+                            // Check if the user is logged in already
+                            // Get information on user from the server
+                            UtilREST util = new UtilREST(MainActivity.this);
+                            util.getAccount(name).addOnSuccessListener(new OnSuccessListener<JSONObject>() {
+                                @Override
+                                public void onSuccess(JSONObject jsonObject) {
+                                    JSONArray accounts = null;
+                                    try {
+                                        accounts = jsonObject.getJSONArray("accounts");
+                                        PersistentDataSingleton.persistentData.user = new Account(accounts.getJSONObject(0));
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    // Start the homepage activity
+                                    finish();
+                                    Intent homepageIntent = new Intent(MainActivity.this, HomepageActivity.class);
+                                    startActivity(homepageIntent);
+                                }
+                            });
+                        }
                     }
                 }
-            });
-            // Start the homepage activity
-            finish();
-            Intent homepageIntent = new Intent(this, HomepageActivity.class);
-            startActivity(homepageIntent);
+
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            };
+            databaseReference.addValueEventListener(postListener);
         }
 
         // initialize the user identification fields
@@ -140,7 +172,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         progressDialog.dismiss();
 
                                         if (task.isSuccessful()) {
-
+                                            FirebaseDatabase.getInstance().getReference()
+                                                    .child("Users")
+                                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                    .setValue(user);
                                             Toast.makeText(MainActivity.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
                                             Intent homepageIntent = new Intent(getApplicationContext(), HomepageActivity.class);
                                             finish();

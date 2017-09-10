@@ -51,6 +51,8 @@ class Account{
     public String password;
     public String folders;
 
+    public Account() {}
+
     public Account(JSONObject response) {
 
         // Depends on whether it's for Account or for Receipt
@@ -132,14 +134,14 @@ public class HomepageActivity extends AppCompatActivity
         displaySelectedScreen(R.id.nav_home);
 
         utilRest = new UtilREST(this);
-        utilRest.getDetails(PersistentDataSingleton.persistentData.user.rid).addOnSuccessListener(
-                new OnSuccessListener<JSONArray>() {
-                    @Override
-                    public void onSuccess(JSONArray jsonArray) {
-                        Log.e("BPAW", "The details are in this jsonObject " + jsonArray.toString());
-                    }
-                }
-        );
+//        utilRest.getDetails(PersistentDataSingleton.persistentData.user.rid).addOnSuccessListener(
+//                new OnSuccessListener<JSONArray>() {
+//                    @Override
+//                    public void onSuccess(JSONArray jsonArray) {
+//                        Log.e("BPAW", "The details are in this jsonObject " + jsonArray.toString());
+//                    }
+//                }
+//        );
 //        utilRest.getAllAccounts();
 //        utilRest.getAllReceipts();
 //        utilRest.getFolders();
