@@ -37,10 +37,10 @@ class FolderViewHolder extends RecyclerView.ViewHolder {
 
 public class FolderAdapter extends RecyclerView.Adapter<FolderViewHolder> {
 
-    private Activity activity;
+    private HomepageActivity activity;
     private List<String> folders;
 
-    public FolderAdapter(List<String> folders, Activity activity) {
+    public FolderAdapter(List<String> folders, HomepageActivity activity) {
         this.activity = activity;
         this.folders = folders;
     }
@@ -67,6 +67,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderViewHolder> {
                         @Override
                         public void onSuccess(JSONObject jsonObject) {
                             Log.e("BPAW", "the JSONObject is " + jsonObject.toString());
+                            activity.getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new fragment_receipt()).commit();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                     @Override
